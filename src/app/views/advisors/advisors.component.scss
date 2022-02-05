@@ -1,0 +1,38 @@
+.btn-block {
+  margin: 5px;
+}
+
+.search {
+  text-align: left;
+  margin: 15px;
+}
+.mat-paginator {
+  width: 70%;
+  margin-left: calc(50% - 35%);
+}
+
+.table {
+  width: 70%;
+  margin-left: calc(50% - 35%);
+  .mat-header-cell {
+    text-align: center;
+  }
+
+  .table-row {
+    cursor: pointer;
+  }
+
+  .mat-row:hover {
+    background-color: lightgrey;
+  }
+}
+
+.container {
+  padding: 60px 0 40px;
+  margin-bottom: 30px;
+  background-color: lightgrey;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}

@@ -1,0 +1,20 @@
+.box {
+  width: calc(100% - 32px);
+  background-color: lightgrey;
+  //left: 79px;
+}
+
+h1,
+h2,
+p {
+  margin-bottom: 0px;
+}
+
+.all-notes-container {
+  overflow-y: scroll;
+  max-height: 350px;
+}
+
+mat-form-field {
+  width: 100%;
+}

@@ -1,0 +1,46 @@
+<div id="chat-container">
+  <div id="search-container">
+    <button mat-raised-button class="back-button" routerLink="/">Back</button>
+    <input type="text" placeholder="Search" />
+  </div>
+  <div id="conversation-list">
+    <div class="conversation active">
+      <img src="{{ chatWith?.avatar }}" alt="avatar" />
+      <div class="title-text">
+        <p [hidden]="!chatWith?.userName">{{ chatWith?.userName }}</p>
+      </div>
+      <div class="created-date">{{ requestDate }}</div>
+      <div class="conversation-message" [hidden]="!activeSession">1234</div>
+    </div>
+  </div>
+  <div id="new-message-container">
+    <a href="#">+</a>
+  </div>
+  <div id="chat-title">
+    <span
+      ><p [hidden]="!chatWith?.userName">
+        {{ chatWith?.userName }}
+      </p></span
+    >
+    <mat-icon id="trash-icon">delete</mat-icon>
+  </div>
+  <div id="chat-message-list" [hidden]="!activeSession">
+    <div class="message-row other-message">
+      <div class="message-content">
+        <img src="{{ chatWith?.avatar }}" alt="avatar" />
+        <div class="message-text">OH HELP!</div>
+        <div class="message-time">{{ requestDate }}</div>
+      </div>
+    </div>
+    <div class="message-row your-message">
+      <div class="message-content">
+        <div class="message-text">Ok then. Bye Bye</div>
+        <div class="message-time">April 15</div>
+      </div>
+    </div>
+  </div>
+  <div id="chat-form">
+    <mat-icon>attach_file</mat-icon>
+    <input type="text" placeholder="Type a message" />
+  </div>
+</div>

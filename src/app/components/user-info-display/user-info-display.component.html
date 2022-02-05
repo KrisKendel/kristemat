@@ -1,0 +1,7 @@
+<img
+  class="user-image"
+  [hidden]="!this.avatar"
+  onError="this.src='../../assets/images/avatar.PNG'"
+  src="{{ this.avatar }}"
+/>
+<p class="username" *ngIf="this.userName">{{ this.userName }}</p>

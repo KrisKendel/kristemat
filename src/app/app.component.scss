@@ -1,0 +1,63 @@
+@import './../styles.scss';
+@import url('https://fonts.googleapis.com/css2?family=Palanquin:wght@300;500&display=swap');
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.mat-toolbar.mat-primary {
+  background: transparent;
+}
+
+.icon {
+  color: black;
+}
+
+#name {
+  margin-left: 20px;
+  cursor: pointer;
+  outline: none;
+  text-align: left;
+  font: normal normal bold 18px/38px Palanquin;
+  letter-spacing: 0px;
+  color: #363636;
+  opacity: 1;
+}
+
+.logo {
+  margin-left: 5px;
+}
+
+.example-container {
+  position: absolute;
+  top: 60px;
+  bottom: 60px;
+  left: 0;
+  right: 0;
+}
+
+.example-sidenav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  background: #363636;
+}
+
+.background-login {
+  background-image: url(../assets/images/background-after.png);
+
+  background-repeat: no-repeat;
+  margin: 0 auto;
+  background-size: cover;
+  background-position: center center;
+}
+
+.background-logout {
+  background-image: url(../assets/images/background.png);
+
+  background-repeat: no-repeat;
+  margin: 0 auto;
+  background-size: cover;
+  background-position: center center;
+}

@@ -1,0 +1,50 @@
+<div class="wrapper" *ngIf="user$ | async; let user">
+  <mat-card class="box">
+    <mat-card-header>
+      <mat-card-title>Edit profile</mat-card-title>
+    </mat-card-header>
+
+    <form [formGroup]="editForm" *ngIf="editForm">
+      <div class="text-inside">
+        <mat-form-field>
+          <input matInput placeholder="Username" value="{{ user.userName }}" formControlName="userName" maxlength="200"
+            required />
+          <mat-error *ngIf="editForm.controls.userName.hasError('required')">
+            Please enter username
+          </mat-error>
+          <mat-error *ngIf="editForm.controls.userName.hasError('pattern')">
+            Please enter valid username
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="text-inside">
+        <mat-form-field class="example-full-width">
+          <input matInput placeholder="E-mail" value="{{ user.email }}" formControlName="email" required />
+          <mat-error *ngIf="editForm.controls.email.hasError('required')">
+            Please enter E-mail
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="text-inside">
+        <mat-form-field>
+          <textarea matInput placeholder="Avatar URL" style="resize: none" value="{{ user.avatar }}"
+            formControlName="avatar"></textarea>
+        </mat-form-field>
+      </div>
+      <mat-form-field>
+        <textarea matInput id="description" placeholder="Description" style="resize: none"
+          value="{{ user.description }}" formControlName="description"></textarea>
+      </mat-form-field>
+
+      <div class="btn-sec">
+        <button mat-raised-button type="button" class="cancel-btn" (click)="closeDialog()">
+          Cancel
+        </button>
+        <button mat-raised-button type="submit" [disabled]="!editForm.valid" class="update-btn" (click)="onEditUser()">
+          Update
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

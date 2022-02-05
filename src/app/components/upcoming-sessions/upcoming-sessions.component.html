@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="box">
+        <h1>Upcoming Sessions</h1>
+        <div class="search">
+          <mat-form-field>
+            <mat-label>Search Upcoming Sessions</mat-label>
+            <input matInput autocomplete="off" class="input-field" #input (keyup)="applyFilter($event)" />
+          </mat-form-field>
+        </div>
+        <div class="mat-elevation-z8">
+          <table mat-table [dataSource]="dataSource" class="table">
+            <ng-container matColumnDef="userName">
+              <th mat-header-cell *matHeaderCellDef>Client</th>
+              <td mat-cell *matCellDef="let session">
+                {{ session.userName }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dateTime">
+              <th mat-header-cell *matHeaderCellDef>Date and Time</th>
+              <td mat-cell *matCellDef="let session">
+                {{ session.date | date: 'dd.MM.yyyy - hh:mm' }}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row class="table-row" (click)="openChat(row.id)" *matRowDef="let row; columns: displayedColumns">
+            </tr>
+          </table>
+          <mat-paginator [length]="sessionsLength" [pageSize]="pageSize" [pageSizeOptions]="[2, 3, 5, 20]">
+          </mat-paginator>
+        </div>
+        <button mat-raised-button type="button" class="btn-block" routerLink="/profile">
+          Back
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

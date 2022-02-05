@@ -1,0 +1,22 @@
+<div class="home-container">
+  <div class="home-select">
+    <div class="headline">
+      <div class="main-title-container">
+        <h1 class="headline-text main-title">
+          {{ 'WELCOME_TITLE' | translate}}
+        </h1>
+      </div>
+      <div class="title-container">
+        <h3 class="headline-text title">
+          {{ 'WELCOME_MESSAGE' | translate }}
+        </h3>
+      </div>
+    </div>
+    <div class="buttons">
+      <button mat-raised-button class="login" routerLink="/login">{{ 'LOGIN' | translate }}</button>
+      <button class="register" mat-raised-button routerLink="/register">
+        {{ 'JOIN_FREE' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

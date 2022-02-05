@@ -1,0 +1,68 @@
+<div class="login-wrapper">
+  <mat-card class="box">
+    <button mat-raised-button class="btn-block" routerLink="/advisors">
+      Back
+    </button>
+    <mat-card-content>
+      <div *ngIf="advisor$ | async; let advisor" class="container">
+        <div class="info">
+          <strong>Username</strong>
+          <p>{{ advisor?.userName }}</p>
+
+          <strong>Email</strong>
+          <p>{{ advisor?.email }}</p>
+
+          <strong>Gender</strong>
+          <p>Female</p>
+
+          <strong>Description</strong>
+          <p>{{ advisor?.description }}</p>
+
+          <strong *ngIf="advisor?.education">Education</strong>
+          <p>{{ advisor?.education }}</p>
+        </div>
+        <div class="avatar">
+          <img class="img-fluid" onError="this.src='../../assets/images/avatar.PNG'" src="{{ advisor?.avatar }}" />
+        </div>
+      </div>
+      <hr />
+      <div class="table-title">
+        <h1>Available sessions</h1>
+      </div>
+      <div class="search">
+        <mat-form-field>
+          <mat-label>Search available sessions</mat-label>
+          <input matInput autocomplete="off" class="input-field" #input (keyup)="applyFilter($event)" />
+        </mat-form-field>
+      </div>
+      <table mat-table [dataSource]="sessions$ | async" class="table">
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Date</th>
+          <td mat-cell *matCellDef="let session">
+            {{ session.date | date: 'dd.MM.yyyy - hh:mm' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="makeRequest">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let session">
+            <button [disabled]="session.status === 1" mat-raised-button
+              (click)="openSessionRequestDialog(session.date, session.id)">
+              Request
+            </button>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let session">
+            {{ session.statusString }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row class="table-row" *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      <mat-paginator [length]="(sessions$ | async)?.length" [pageSize]="pageSize" [pageSizeOptions]="[2, 3, 5, 20]">
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,14 @@
+<div class="login-wrapper">
+  <mat-card class="box" class="calendar-container">
+    <mat-card-header>
+      <mat-card-title>My Sessions</mat-card-title>
+    </mat-card-header>
+    <button mat-raised-button class="btn-block" routerLink="/">Back</button>
+    <mat-card-content class="calendar">
+      <full-calendar
+        [hidden]="!loaded"
+        [options]="calendarOptions"
+      ></full-calendar>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="box">
+        <h1>Available dates</h1>
+        <form [formGroup]="formGroup" (ngSubmit)="addAvailableDate()">
+          <mat-form-field>
+
+            <mat-label>Choose a date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="availableDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+
+
+          </mat-form-field>
+          <button class="add-date-button" [disabled]="!formGroup.valid" mat-raised-button type="submit">
+            Add date
+          </button>
+        </form>
+        <div class="mat-elevation-z8" *ngIf="dataSource$ | async, let sessions">
+          <div *ngFor="let session of sessions">
+            <h2>{{ session.date | date: 'dd.MM.yyyy - HH:mm' }}</h2>
+          </div>
+        </div>
+
+        <button mat-raised-button type="button" class="btn-block" routerLink="/profile">
+          Back
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

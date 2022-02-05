@@ -1,0 +1,37 @@
+<div class="wrapper">
+  <mat-card class="box">
+    <button mat-raised-button class="back-button" routerLink="/">{{ 'BACK' | translate }}</button>
+    <mat-card-header style="margin-top: 12px">
+      <mat-card-title>My notes</mat-card-title>
+    </mat-card-header>
+    <div class="notes-container">
+      <mat-form-field class="date-picker" appearance="fill">
+        <input matInput placeholder="Note date" [(ngModel)]="noteDate" [matDatepicker]="picker" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <br />
+
+      <mat-form-field>
+        <input matInput [(ngModel)]="contentTitle" placeholder="Title" />
+      </mat-form-field>
+      <br />
+
+      <mat-form-field>
+        <textarea matInput [(ngModel)]="note" placeholder="Note"></textarea>
+      </mat-form-field>
+    </div>
+    <br />
+    <button mat-raised-button (click)="createNote()">Add Note</button>
+    <hr />
+    <div class="all-notes-container">
+      <p *ngFor="let note of this.userNotes">
+        <mat-card>
+          <h1>{{ note.date | date }}</h1>
+          <h2>{{ note.title }}</h2>
+          <p>{{ note.note }}</p>
+        </mat-card>
+      </p>
+    </div>
+  </mat-card>
+</div>

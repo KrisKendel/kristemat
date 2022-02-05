@@ -1,0 +1,27 @@
+<div class="container" *ngIf="user$ | async; let user">
+  <div class="row">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="avatar">
+        <div class="picture">
+          <img class="img-fluid" onError="this.src='../../assets/images/avatar.PNG'" src="{{ user.avatar }}" />
+        </div>
+
+        <h2 class="name">{{ user.userName}}</h2>
+        <h4 class="description">{{ user.description }}</h4>
+        <p class="title">{{ user.email }}</p>
+        <button mat-raised-button routerLink="requested-sessions">
+          {{ 'PENDING_SESSIONS' | translate }}
+        </button>
+        <button mat-raised-button class="btn-block" (click)="openEditProfileDialog()">
+          {{ 'EDIT' | translate }}
+        </button>
+        <button *ngIf="user.type === 0" mat-raised-button routerLink="available-dates">
+          {{ 'AVAILABLE_DATES' | translate }}
+        </button>
+        <button mat-raised-button routerLink="upcoming" class="btn-block">
+          {{ 'UPCOMING_SESSIONS' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <span id="name" routerLink="/">KRISTEMAT</span>
+    <span class="example-spacer"></span>
+    <app-user-info-display *ngIf="this.user" style="display: flex"></app-user-info-display>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon class="icon" *ngIf="this.user">menu </mat-icon>
+    </button>
+    <mat-menu id="menu " #menu="matMenu">
+      <form [formGroup]="languageForm">
+        <mat-form-field appearance="fill">
+          <mat-label>Language</mat-label>
+          <mat-select formControlName="language" (selectionChange)="onSelectLanguage()">
+            <mat-option *ngFor="let language of languages" [value]="language.value">
+              {{ language.value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+      <button mat-menu-item (click)="logout()">{{ 'LOGOUT' | translate}}</button>
+    </mat-menu>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav *ngIf="this.user" mode="side" opened class="example-sidenav" [fixedInViewport]="true"
+    [fixedTopGap]="60">
+    <app-sidebar [hidden]="!this.user"></app-sidebar>
+  </mat-sidenav>
+
+  <mat-sidenav-content [ngClass]="this.user ? 'background-login' : 'background-logout'">
+    <app-welcome-screen *ngIf="!this.user"></app-welcome-screen>
+    <router-outlet> </router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

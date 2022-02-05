@@ -1,0 +1,19 @@
+<div class="wrapper" *ngIf="this.activeUser">
+  <button mat-icon-button class="btn-block" routerLink="/profile">
+    <mat-icon class="menu-icon">person</mat-icon>
+  </button>
+  <button mat-icon-button class="btn-block" routerLink="/calendar">
+    <mat-icon class="menu-icon">calendar_today</mat-icon>
+  </button>
+  <button mat-icon-button class="btn-block" routerLink="/chat">
+    <mat-icon class="menu-icon">chat</mat-icon>
+  </button>
+  <button mat-icon-button class="btn-block" routerLink="/my-notes">
+    <mat-icon class="menu-icon">notes</mat-icon>
+  </button>
+  <div class="button" *ngIf="this.canSeeAdvisorsList">
+    <button mat-icon-button class="btn-block" routerLink="/advisors">
+      <mat-icon class="menu-icon">perm_contact_calendar</mat-icon>
+    </button>
+  </div>
+</div>

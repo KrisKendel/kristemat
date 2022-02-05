@@ -1,0 +1,80 @@
+h2,
+h1 {
+  color: white;
+}
+
+@import '../../../styles.scss';
+
+.wrapper {
+  margin-left: calc(50% - 23px);
+
+  .example-form {
+    min-width: 100%;
+    max-width: 80px;
+    width: 100%;
+  }
+
+  .btn-block {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    transition: 0.3s;
+    &:hover {
+      cursor: pointer;
+      background: lightgray;
+      transition: 0.3s;
+    }
+    .menu-icon {
+      color: white;
+      &:hover {
+        color: black;
+      }
+    }
+  }
+
+  mat-card-header {
+    text-align: center;
+    width: 100%;
+    display: block;
+    font-weight: 700;
+  }
+
+  mat-card-header {
+    mat-card-title {
+      font-size: 30px;
+      margin: 0;
+      padding-bottom: 20px;
+    }
+  }
+
+  .mat-card {
+    padding: 40px 70px 50px;
+  }
+}
+
+.positronx {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.box {
+  position: relative;
+  opacity: 1;
+  float: left;
+  padding: 60px 50px 40px 50px;
+  background: transparent;
+  transform: scale(1);
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  z-index: 5;
+  width: 50px;
+  max-width: 330px;
+
+  &.back {
+    transform: scale(0.95);
+    -webkit-transform: scale(0.95);
+    -ms-transform: scale(0.95);
+    top: -20px;
+    opacity: 0.8;
+    z-index: -1;
+  }
+}

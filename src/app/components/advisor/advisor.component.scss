@@ -1,0 +1,36 @@
+.login-wrapper {
+  width: calc(100% - 112px);
+}
+
+mat-card {
+  background: lightgrey;
+}
+
+.btn-block {
+  margin-bottom: 20px;
+}
+
+.container {
+  display: flex;
+  .avatar {
+    position: absolute;
+    right: 70px;
+  }
+}
+
+.img-fluid {
+  width: 220px;
+  border-radius: 50%;
+  border: 3px solid #363636;
+}
+
+.table {
+  width: 100%;
+  .mat-row:hover {
+    background-color: lightgray;
+  }
+
+  .table-row {
+    cursor: default;
+  }
+}
