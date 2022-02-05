@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SessionService } from 'src/app/services/session.service';
 import { SnackBarService } from 'src/app/services/snackbar.service';
 
@@ -32,6 +32,17 @@ export class AcceptSessionComponent implements OnInit {
   }
 
   closeDialog(): void {
+    if (this.data.fromCalendar) {
+      this.sessionService
+        .rejectSessionRequest(this.data.sessionId)
+        .subscribe((res) => {
+          this.snackBarService.createSnackBar('success', res.message);
+        },
+          (err) => {
+            this.snackBarService.createSnackBar('error', err.statusText);
+          }
+        );
+    }
     this.dialog.closeAll();
   }
 }

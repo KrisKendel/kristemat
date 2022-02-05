@@ -7,6 +7,8 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { UserService } from 'src/app/services/users.service';
 import { map, tap } from 'rxjs/operators';
 import { SessionStatus } from 'src/app/models/session.model';
+import { MatDialog } from '@angular/material/dialog';
+import { AcceptSessionComponent } from 'src/app/components/dialogs/accept-session/accept-session.component';
 
 @Component({
   selector: 'app-calendar',
@@ -21,14 +23,18 @@ export class CalendarComponent implements OnInit {
   calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
-    dateClick: this.handleDateClick.bind(this),
+    eventClick: this.handleEventClick.bind(this),
     height: 650,
     selectable: true,
     progressiveEventRendering: true,
   };
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
+    this.getSessions();
+  }
+
+  getSessions() {
     this.userService
       .getActiveUser()
       .pipe(map((el) => el.sessions))
@@ -68,8 +74,23 @@ export class CalendarComponent implements OnInit {
       );
   }
 
-  handleDateClick(arg) {
-    // dodat slobodne dane u kalendar, ako advisor
-    alert('date click! ' + arg.dateStr);
+  handleEventClick(arg) {
+    console.log(arg?.event._def);
+    if (arg.event._def.extendedProps.status === SessionStatus.REQUESTED) {
+      this.openAcceptDialog(arg.event._def.publicId);
+    }
+  }
+
+  openAcceptDialog(id) {
+    console.log(id);
+    const acceptDialog = this.dialog.open(AcceptSessionComponent, {
+      width: '640px',
+      data: { sessionId: id, fromCalendar: true },
+    });
+
+    acceptDialog.afterClosed().subscribe(() => {
+      this.getSessions();
+    });
   }
 }
+
