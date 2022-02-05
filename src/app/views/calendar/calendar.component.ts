@@ -23,6 +23,12 @@ export class CalendarComponent implements OnInit {
   calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
+    eventTimeFormat: {
+      hour: '2-digit',
+      minute: '2-digit',
+      meridiem: false,
+      hour12: false
+    },
     eventClick: this.handleEventClick.bind(this),
     height: 650,
     selectable: true,
@@ -78,10 +84,13 @@ export class CalendarComponent implements OnInit {
     console.log(arg?.event._def);
     if (arg.event._def.extendedProps.status === SessionStatus.REQUESTED) {
       this.openAcceptDialog(arg.event._def.publicId);
+    } else if (arg.event._def.extendedProps.status === SessionStatus.ACCEPTED) {
+      // show info
+      alert(arg.event._def.extendedProps.requestedAt);
     }
   }
 
-  openAcceptDialog(id) {
+  openAcceptDialog(id: string) {
     console.log(id);
     const acceptDialog = this.dialog.open(AcceptSessionComponent, {
       width: '640px',
