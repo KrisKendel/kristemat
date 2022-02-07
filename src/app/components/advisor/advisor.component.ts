@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, Observable, of, Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable, of, Subject, Subscription } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { Advisor } from 'src/app/models/advisor';
 import { Session, SessionStatus } from 'src/app/models/session.model';
 import { UserService } from 'src/app/services/users.service';
@@ -15,10 +14,10 @@ import { SendSessionRequestComponent } from '../dialogs/send-session-request/sen
   templateUrl: './advisor.component.html',
   styleUrls: ['./advisor.component.scss'],
 })
-export class AdvisorComponent implements OnInit {
+export class AdvisorComponent implements OnInit, OnDestroy {
   userId: string;
-  // advisor: Advisor;
   advisor$: Observable<Advisor>;
+  destroyed$: Subject<boolean> = new Subject<boolean>();
   sessions: Session[] = [];
   sessions$: Observable<any[]> = of([]);
   reformatDate: string;
@@ -40,12 +39,18 @@ export class AdvisorComponent implements OnInit {
     this.getSessions();
   }
 
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
+
   getSessions() {
     this.userId = this.route.snapshot.params.userid;
-    // check how to combine observables!
+    //combine those observables!
     this.advisor$ = this.userService.getAdvisorById(this.userId);
     this.sessions$ = this.userService.getAdvisorById(this.userId)
       .pipe(
+        takeUntil(this.destroyed$),
         map(
           (user) => {
             return user.sessions.filter(session => {

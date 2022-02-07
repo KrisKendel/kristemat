@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { AppUser, UserType } from 'src/app/models/app-user';
 import { UserService } from 'src/app/services/users.service';
 
@@ -7,10 +9,11 @@ import { UserService } from 'src/app/services/users.service';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
   activeUser: AppUser;
   canSeeAdvisorsList = false;
-  avatar: any;
+  avatar: string;
+  destroyed$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private userService: UserService) { }
 
@@ -18,16 +21,23 @@ export class SidebarComponent implements OnInit {
     this.checkUserType();
   }
 
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
+
   checkUserType() {
-    this.userService.getActiveUser().subscribe((user) => {
-      this.activeUser = user;
-      if (this.activeUser.type === UserType.CLIENT) {
-        this.canSeeAdvisorsList = true;
-      } else {
-        this.canSeeAdvisorsList = false;
-      }
-    },
-      (error) => console.log(error)
-    );
+    this.userService.getActiveUser()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((user) => {
+        this.activeUser = user;
+        if (this.activeUser.type === UserType.CLIENT) {
+          this.canSeeAdvisorsList = true;
+        } else {
+          this.canSeeAdvisorsList = false;
+        }
+      },
+        (error) => console.log(error)
+      );
   }
 }

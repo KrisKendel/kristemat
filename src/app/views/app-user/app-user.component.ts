@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Session } from 'src/app/models/session.model';
 import { AppUser } from 'src/app/models/app-user';
@@ -13,7 +13,7 @@ import { DateAdapter } from '@angular/material/core';
   templateUrl: './app-user.component.html',
   styleUrls: ['./app-user.component.scss'],
 })
-export class AppUserComponent implements OnInit, OnDestroy {
+export class AppUserComponent implements OnInit {
   user$: Observable<AppUser>;
   requestedSessions: Session[] = [];
   subList$: Subscription[] = [];
@@ -29,17 +29,10 @@ export class AppUserComponent implements OnInit, OnDestroy {
     this.user$ = this.userService.getActiveUser();
   }
 
-  ngOnDestroy() {
-    this.subList$.forEach((sub) => sub.unsubscribe());
-  }
-
   openEditProfileDialog() {
     const dialogRef = this.dialog.open(UserEditComponent, { width: '50%' });
-
-    this.subList$.push(
-      dialogRef.afterClosed().subscribe(() => {
-        this.user$ = this.userService.getActiveUser();
-      })
-    );
+    dialogRef.afterClosed().subscribe(() => {
+      this.user$ = this.userService.getActiveUser();
+    })
   }
 }

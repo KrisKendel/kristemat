@@ -1,24 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Calendar } from '@fullcalendar/core';
 import { CalendarOptions } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 
 import { UserService } from 'src/app/services/users.service';
-import { map, tap } from 'rxjs/operators';
+import { map, takeUntil, tap } from 'rxjs/operators';
 import { SessionStatus } from 'src/app/models/session.model';
 import { MatDialog } from '@angular/material/dialog';
 import { AcceptSessionComponent } from 'src/app/components/dialogs/accept-session/accept-session.component';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy {
   calendar = Calendar.name;
   loaded: boolean;
   sessionRequests: any = [];
+  destroyed$: Subject<boolean> = new Subject<boolean>();
   error: Error;
 
   calendarOptions: CalendarOptions = {
@@ -41,10 +43,17 @@ export class CalendarComponent implements OnInit {
     this.getSessions();
   }
 
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
+
   async getSessions() {
     this.userService
       .getActiveUser()
-      .pipe(map((el) => el.sessions))
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((el) => el.sessions))
       .pipe(
         tap((sessions) => sessions.forEach(async (el) => {
           switch (el.status) {
@@ -82,7 +91,6 @@ export class CalendarComponent implements OnInit {
   }
 
   handleEventClick(arg) {
-    console.log(arg?.event._def);
     if (arg.event._def.extendedProps.status === SessionStatus.REQUESTED) {
       this.openAcceptDialog(arg.event._def.publicId);
     } else if (arg.event._def.extendedProps.status === SessionStatus.ACCEPTED) {

@@ -28,7 +28,7 @@
             <tr mat-row class="table-row" (click)="openChat(row.id)" *matRowDef="let row; columns: displayedColumns">
             </tr>
           </table>
-          <mat-paginator [length]="sessionsLength" [pageSize]="pageSize" [pageSizeOptions]="[2, 3, 5, 20]">
+          <mat-paginator [length]="dataSource?.data?.length" [pageSize]="pageSize" [pageSizeOptions]="[2, 3, 5, 20]">
           </mat-paginator>
         </div>
         <button mat-raised-button type="button" class="btn-block" routerLink="/profile">
