@@ -3,8 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ChatWith } from 'src/app/models/chat';
 import { UserService } from 'src/app/services/users.service';
 import * as moment from 'moment';
-import * as signalR from '@microsoft/signalr';
-import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -21,26 +20,15 @@ export class ChatComponent implements OnInit {
   participantAvatar: string;
   chatWith: ChatWith = {};
   requestDate: any;
+  liveData$: Observable<any>;
 
   constructor(
     private userService: UserService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+
   ) { }
   // TODO Needs big refactor
   ngOnInit(): void {
-    // const connection = new signalR.HubConnectionBuilder()
-    //   .configureLogging(signalR.LogLevel.Information)
-    //   .withUrl(environment.production + 'notify')
-    //   .build();
-
-    // connection
-    //   .start()
-    //   .then(() => {
-    //     console.log('SignalR Connected!');
-    //   })
-    //   .catch((err) => {
-    //     return console.error(err.toString());
-    //   });
 
     this.sessionId = this.route.snapshot.params.id;
     this.userService.getActiveUser().subscribe((user) => {

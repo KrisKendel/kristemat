@@ -19,6 +19,7 @@ export class CalendarComponent implements OnInit {
   calendar = Calendar.name;
   loaded: boolean;
   sessionRequests: any = [];
+  error: Error;
 
   calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, interactionPlugin],
@@ -40,12 +41,12 @@ export class CalendarComponent implements OnInit {
     this.getSessions();
   }
 
-  getSessions() {
+  async getSessions() {
     this.userService
       .getActiveUser()
       .pipe(map((el) => el.sessions))
       .pipe(
-        tap((sessions) => sessions.forEach((el) => {
+        tap((sessions) => sessions.forEach(async (el) => {
           switch (el.status) {
             case SessionStatus.AVAILABLE:
               el.title = 'Available';
@@ -56,7 +57,7 @@ export class CalendarComponent implements OnInit {
               el.color = 'yellow';
               break;
             case SessionStatus.ACCEPTED:
-              el.title = 'Accepted';
+              el.title = 'Accepted'
               el.color = 'blue';
               break;
             case SessionStatus.REJECTED:
@@ -76,7 +77,7 @@ export class CalendarComponent implements OnInit {
           this.calendarOptions.events = sessions;
           this.loaded = true;
         },
-        (error) => console.log(error)
+        (error) => this.error = error
       );
   }
 
@@ -85,13 +86,12 @@ export class CalendarComponent implements OnInit {
     if (arg.event._def.extendedProps.status === SessionStatus.REQUESTED) {
       this.openAcceptDialog(arg.event._def.publicId);
     } else if (arg.event._def.extendedProps.status === SessionStatus.ACCEPTED) {
-      // show info
+      // show info about session
       alert(arg.event._def.extendedProps.requestedAt);
     }
   }
 
   openAcceptDialog(id: string) {
-    console.log(id);
     const acceptDialog = this.dialog.open(AcceptSessionComponent, {
       width: '640px',
       data: { sessionId: id, fromCalendar: true },

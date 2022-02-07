@@ -34,7 +34,7 @@ export class AppUserComponent implements OnInit, OnDestroy {
   }
 
   openEditProfileDialog() {
-    const dialogRef = this.dialog.open(UserEditComponent, { width: '300px' });
+    const dialogRef = this.dialog.open(UserEditComponent, { width: '50%' });
 
     this.subList$.push(
       dialogRef.afterClosed().subscribe(() => {

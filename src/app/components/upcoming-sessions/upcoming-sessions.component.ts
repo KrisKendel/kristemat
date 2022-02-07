@@ -8,8 +8,8 @@ import { AcceptSessionComponent } from '../dialogs/accept-session/accept-session
 import { RejectSessionComponent } from '../dialogs/reject-session/reject-session.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
-import { map, mergeMap, switchMap } from 'rxjs/operators';
-import { forkJoin, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-upcoming-sessions',
@@ -19,7 +19,7 @@ import { forkJoin, Observable } from 'rxjs';
 export class UpcomingSessionsComponent implements OnInit {
   user: AppUser;
   upcomingSessions: Session[] = [];
-  displayedColumns: string[] = ['userName', 'dateTime'];
+  displayedColumns: string[] = ['userName', 'date'];
   dataSource: MatTableDataSource<Session>;
   sessionsLength = 0;
   pageSize = 5;
@@ -44,14 +44,7 @@ export class UpcomingSessionsComponent implements OnInit {
   getUpcomingSessions(): Observable<any> {
     return this.userService.getActiveUser()
       .pipe(
-        switchMap(
-          (user) => {
-            return forkJoin(
-              user.sessions.filter(t => t.participantId && t.status === SessionStatus.ACCEPTED)
-                .map(s => this.userService.getAdvisorById(s.participantId))
-            )
-          }
-        )
+        map((user) => user.sessions.filter(t => t.participantId && t.status === SessionStatus.ACCEPTED))
       )
   }
 

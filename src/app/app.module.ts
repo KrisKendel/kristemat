@@ -12,7 +12,6 @@ import { AppComponent } from './app.component';
 import { LogInComponent } from './views/log-in/log-in.component';
 import { RegisterComponent } from './views/register/register.component';
 
-import { ClientComponent } from './components/client/client.component';
 import { UserInfoDisplayComponent } from './components/user-info-display/user-info-display.component';
 import { SendSessionRequestComponent } from './components/dialogs/send-session-request/send-session-request.component';
 import { UserEditComponent } from './components/user-edit/user-edit.component';
@@ -29,6 +28,7 @@ import { MyHttpInterceptor } from './http.interceptor';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SnackBarService } from './services/snackbar.service';
+import { NamePipe } from './pipes/name.pipe';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -40,7 +40,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppComponent,
     LogInComponent,
     RegisterComponent,
-    ClientComponent,
     UserEditComponent,
     UserInfoDisplayComponent,
     SendSessionRequestComponent,

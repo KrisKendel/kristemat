@@ -1,4 +1,4 @@
-# Frontend
+# Kristemat
 
 Practice project
 

@@ -17,11 +17,11 @@
     <a href="#">+</a>
   </div>
   <div id="chat-title">
-    <span
-      ><p [hidden]="!chatWith?.userName">
+    <span>
+      <p [hidden]="!chatWith?.userName">
         {{ chatWith?.userName }}
-      </p></span
-    >
+      </p>
+    </span>
     <mat-icon id="trash-icon">delete</mat-icon>
   </div>
   <div id="chat-message-list" [hidden]="!activeSession">
@@ -34,7 +34,8 @@
     </div>
     <div class="message-row your-message">
       <div class="message-content">
-        <div class="message-text">Ok then. Bye Bye</div>
+        <div class="message-text">Ok then. Bye Bye
+        </div>
         <div class="message-time">April 15</div>
       </div>
     </div>
