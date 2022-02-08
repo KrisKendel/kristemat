@@ -7,6 +7,7 @@ import { UserService } from 'src/app/services/users.service';
 import { map, takeUntil } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { SnackBarService } from 'src/app/services/snackbar.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-available-dates',
@@ -17,8 +18,11 @@ export class AvailableDatesComponent implements OnInit, OnDestroy {
   dateControl: FormControl;
   formGroup: FormGroup;
   dataSource$: Observable<Session[]>;
+  dataSource: any;
   minDate = new Date();
   destroyed$: Subject<boolean> = new Subject<boolean>();
+  displayedColumns: string[] = ['dateTime'];
+  pageSize = 5;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
@@ -44,10 +48,14 @@ export class AvailableDatesComponent implements OnInit, OnDestroy {
   }
 
   getAvailableDates() {
-    this.dataSource$ = this.userService.getActiveUser().pipe(
+    this.userService.getActiveUser().pipe(
       takeUntil(this.destroyed$),
       map((user) => user.sessions.filter((session) => session.status === SessionStatus.AVAILABLE))
-    );
+    ).subscribe((res) => {
+      this.dataSource = new MatTableDataSource<Session>(res);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource$ = this.dataSource.connect();
+    });
   }
 
   addAvailableDate() {
@@ -61,7 +69,7 @@ export class AvailableDatesComponent implements OnInit, OnDestroy {
         this.formGroup.reset();
       },
         (err) => {
-          this.snackBarService.createSnackBar('success', err.statusText);
+          this.snackBarService.createSnackBar('error', err.error.message);
           this.formGroup.reset();
         }
       );
