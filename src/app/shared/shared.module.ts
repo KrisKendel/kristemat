@@ -33,32 +33,7 @@ import { TranslateModule } from '@ngx-translate/core';
 FullCalendarModule.registerPlugins([dayGridPlugin, interactionPlugin]);
 
 @NgModule({
-  imports: [
-    MatInputModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatMenuModule,
-    MatCardModule,
-    MatDialogModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatGridListModule,
-    MatChipsModule,
-    MatNativeDateModule,
-    MatTableModule,
-    MatAutocompleteModule,
-    MatSnackBarModule,
-    FullCalendarModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatPaginatorModule,
-    MatProgressSpinnerModule,
-    MatSidenavModule,
-    TranslateModule
-  ],
+  imports: [],
   exports: [
     MatInputModule,
     MatButtonModule,

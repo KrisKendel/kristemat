@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Session, SessionStatus } from '../../models/session.model';
 import { AppUser } from 'src/app/models/app-user';
 import { UserService } from 'src/app/services/users.service';
@@ -8,21 +8,24 @@ import { AcceptSessionComponent } from '../dialogs/accept-session/accept-session
 import { RejectSessionComponent } from '../dialogs/reject-session/reject-session.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
-import { map, mergeMap, switchMap } from 'rxjs/operators';
-import { forkJoin, Observable } from 'rxjs';
+import { map, takeUntil, tap } from 'rxjs/operators';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-upcoming-sessions',
   templateUrl: './upcoming-sessions.component.html',
   styleUrls: ['./upcoming-sessions.component.scss'],
 })
-export class UpcomingSessionsComponent implements OnInit {
+export class UpcomingSessionsComponent implements OnInit, OnDestroy {
   user: AppUser;
   upcomingSessions: Session[] = [];
-  displayedColumns: string[] = ['userName', 'dateTime'];
+  displayedColumns: string[] = ['userName', 'date'];
   dataSource: MatTableDataSource<Session>;
+  dataSource$: Observable<any>;
+  destroyed$: Subject<boolean> = new Subject<boolean>();
   sessionsLength = 0;
   pageSize = 5;
+  error: Error;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -33,25 +36,29 @@ export class UpcomingSessionsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getUpcomingSessions().subscribe(res => {
-      this.upcomingSessions.push(...res);
-      this.dataSource = new MatTableDataSource<Session>(this.upcomingSessions);
-      this.dataSource.paginator = this.paginator;
-    });
+    this.getUpcomingSessions()
+      .pipe(
+        takeUntil(this.destroyed$)
+      ).subscribe((res) => {
+        this.dataSource = new MatTableDataSource<Session>(res);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource$ = this.dataSource.connect();
+      },
+        (error) => {
+          this.error = error;
+        })
   }
 
-  // needs to polish columns data-> bitno da radi
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
+
   getUpcomingSessions(): Observable<any> {
     return this.userService.getActiveUser()
       .pipe(
-        switchMap(
-          (user) => {
-            return forkJoin(
-              user.sessions.filter(t => t.participantId && t.status === SessionStatus.ACCEPTED)
-                .map(s => this.userService.getAdvisorById(s.participantId))
-            )
-          }
-        )
+        takeUntil(this.destroyed$),
+        map((user) => user.sessions.filter(t => t.participantId && t.status === SessionStatus.ACCEPTED))
       )
   }
 

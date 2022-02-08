@@ -10,15 +10,15 @@
           </mat-form-field>
         </div>
         <div class="mat-elevation-z8">
-          <table mat-table [dataSource]="dataSource" class="table">
+          <table mat-table [dataSource]="dataSource$ | async" class="table">
             <ng-container matColumnDef="userName">
               <th mat-header-cell *matHeaderCellDef>Client</th>
               <td mat-cell *matCellDef="let session">
-                {{ session.userName }}
+                {{ session.participantId | name | async }}
               </td>
             </ng-container>
 
-            <ng-container matColumnDef="dateTime">
+            <ng-container matColumnDef="date">
               <th mat-header-cell *matHeaderCellDef>Date and Time</th>
               <td mat-cell *matCellDef="let session">
                 {{ session.date | date: 'dd.MM.yyyy - hh:mm' }}
@@ -28,7 +28,7 @@
             <tr mat-row class="table-row" (click)="openChat(row.id)" *matRowDef="let row; columns: displayedColumns">
             </tr>
           </table>
-          <mat-paginator [length]="sessionsLength" [pageSize]="pageSize" [pageSizeOptions]="[2, 3, 5, 20]">
+          <mat-paginator [pageSize]="pageSize" [pageSizeOptions]="[2, 3, 5, 20]">
           </mat-paginator>
         </div>
         <button mat-raised-button type="button" class="btn-block" routerLink="/profile">

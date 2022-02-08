@@ -1,8 +1,8 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
 import { AppUser } from 'src/app/models/app-user';
 import { GlobalService } from 'src/app/services/global.service';
 import { SnackBarService } from 'src/app/services/snackbar.service';
@@ -13,10 +13,11 @@ import { UserService } from 'src/app/services/users.service';
   templateUrl: './user-edit.component.html',
   styleUrls: ['./user-edit.component.scss'],
 })
-export class UserEditComponent implements OnInit {
-  public editForm: FormGroup;
-  public user: AppUser;
-  public user$: Observable<AppUser>;
+export class UserEditComponent implements OnInit, OnDestroy {
+  editForm: FormGroup;
+  user: AppUser;
+  user$: Observable<AppUser>;
+  destroyed$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -31,9 +32,15 @@ export class UserEditComponent implements OnInit {
 
   }
 
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
+
   getUser() {
     this.user$ = this.userService.getActiveUser()
       .pipe(
+        takeUntil(this.destroyed$),
         tap((user) => {
           this.user = user;
           this.initForm();
@@ -52,7 +59,9 @@ export class UserEditComponent implements OnInit {
 
   onEditUser(): void {
     this.userService
-      .editUser(this.editForm.value)
+      .editUser(this.editForm.value).pipe(
+        takeUntil(this.destroyed$)
+      )
       .subscribe((res: any) => {
         this.user = res;
         this.snackBarService.createSnackBar('success', 'User info successfully updated');

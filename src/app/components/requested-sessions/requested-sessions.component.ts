@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Session, SessionStatus } from '../../models/session.model';
 import { AppUser } from 'src/app/models/app-user';
 import { UserService } from 'src/app/services/users.service';
@@ -7,43 +7,51 @@ import { MatDialog } from '@angular/material/dialog';
 import { AcceptSessionComponent } from '../dialogs/accept-session/accept-session.component';
 import { RejectSessionComponent } from '../dialogs/reject-session/reject-session.component';
 import { MatPaginator } from '@angular/material/paginator';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { forkJoin, Observable } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-requested-sessions',
   templateUrl: './requested-sessions.component.html',
   styleUrls: ['./requested-sessions.component.scss'],
 })
-export class RequestedSessionsComponent implements OnInit {
+export class RequestedSessionsComponent implements OnInit, OnDestroy {
   user: AppUser;
   requestedSessions: Session[] = [];
   displayedColumns: string[] = ['client', 'dateTime', 'action'];
   dataSource: any;
+  dataSource$: Observable<any>;
   sessionsLength = 0;
   pageSize = 5;
+  destroyed$: Subject<boolean> = new Subject<boolean>();
+  error: Error;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private userService: UserService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.getRequestedSessions().subscribe(
-      (res) => {
-        this.requestedSessions.push(...res);
-        this.dataSource = new MatTableDataSource<Session>(
-          this.requestedSessions
-        );
+    this.getRequestedSessions()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((res) => {
+        this.dataSource = new MatTableDataSource<Session>(res);
         this.dataSource.paginator = this.paginator;
+        this.dataSource$ = this.dataSource.connect();
       },
-      (error) => {
-        console.log('error', error);
-      }
-    );
+        (error) => {
+          this.error = error;
+        }
+      );
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 
   getRequestedSessions(): Observable<any> {
     return this.userService.getActiveUser().pipe(
+      takeUntil(this.destroyed$),
       map((user) => {
         return user.sessions.filter(
           (session) =>

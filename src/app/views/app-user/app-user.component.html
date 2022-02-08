@@ -9,7 +9,7 @@
         <h2 class="name">{{ user.userName}}</h2>
         <h4 class="description">{{ user.description }}</h4>
         <p class="title">{{ user.email }}</p>
-        <button mat-raised-button routerLink="requested-sessions">
+        <button *ngIf="user.type === 0" mat-raised-button routerLink="requested-sessions">
           {{ 'PENDING_SESSIONS' | translate }}
         </button>
         <button mat-raised-button class="btn-block" (click)="openEditProfileDialog()">
